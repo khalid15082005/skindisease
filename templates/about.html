@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}About - Skin Disease AI{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="display-4 text-primary mb-4">
+            <i class="fas fa-info-circle me-3"></i>
+            About Skin Disease AI
+        </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">🔬 What is Skin Disease AI?</h3>
+                <p class="card-text">
+                    Skin Disease AI is an advanced machine learning application designed to assist in the diagnosis 
+                    of various skin conditions. Our AI system can analyze skin lesion images and provide predictions 
+                    for 6 different types of skin conditions with high accuracy.
+                </p>
+                
+                <h4 class="mt-4">🎯 Supported Conditions</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <strong>Acne</strong> - Common skin condition with pimples
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Carcinoma</strong> - Skin cancer
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Eczema</strong> - Inflammatory skin condition
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <strong>Keratosis</strong> - Rough, scaly patches
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Millia</strong> - Small white bumps
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Rosacea</strong> - Facial redness and bumps
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">📊 Model Information</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="fas fa-cogs text-primary me-2"></i>
+                        <strong>Architecture:</strong> Xception
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-chart-line text-success me-2"></i>
+                        <strong>Accuracy:</strong> 92%
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-images text-info me-2"></i>
+                        <strong>Training Data:</strong> 1,657 images
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-tags text-warning me-2"></i>
+                        <strong>Classes:</strong> 6 skin conditions
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">⚠️ Important Disclaimer</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <strong>This tool is for educational purposes only.</strong> 
+                    Always consult a qualified dermatologist for medical diagnosis and treatment.
+                </p>
+                <p class="card-text">
+                    The AI predictions should not be used as a substitute for professional medical advice.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">🛠️ Tech Stack</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h6>Backend</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fab fa-python me-2"></i>Python</li>
+                            <li><i class="fas fa-flask me-2"></i>Flask</li>
+                            <li><i class="fas fa-cogs me-2"></i>Werkzeug</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <h6>AI/ML</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-brain me-2"></i>TensorFlow</li>
+                            <li><i class="fas fa-layer-group me-2"></i>Keras</li>
+                            <li><i class="fas fa-chart-bar me-2"></i>NumPy</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <h6>Frontend</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fab fa-html5 me-2"></i>HTML5</li>
+                            <li><i class="fab fa-css3-alt me-2"></i>CSS3</li>
+                            <li><i class="fab fa-js me-2"></i>JavaScript</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <h6>UI Framework</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fab fa-bootstrap me-2"></i>Bootstrap 5</li>
+                            <li><i class="fas fa-icons me-2"></i>Font Awesome</li>
+                            <li><i class="fas fa-image me-2"></i>Pillow</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Skin Disease AI{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white text-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-user-plus me-2"></i>
+                    Create Account
+                </h4>
+            </div>
+            <div class="card-body">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="{{ url_for('register') }}" id="registerForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="first_name" class="form-label">
+                                <i class="fas fa-user me-1"></i>First Name
+                            </label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="last_name" class="form-label">
+                                <i class="fas fa-user me-1"></i>Last Name
+                            </label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">
+                            <i class="fas fa-envelope me-1"></i>Email Address
+                        </label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                        <div class="form-text">We'll never share your email with anyone else.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">
+                            <i class="fas fa-lock me-1"></i>Password
+                        </label>
+                        <input type="password" class="form-control" id="password" name="password" required minlength="6">
+                        <div class="form-text">Password must be at least 6 characters long.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="confirm_password" class="form-label">
+                            <i class="fas fa-lock me-1"></i>Confirm Password
+                        </label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                        <div id="passwordMatch" class="form-text"></div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="age" class="form-label">
+                            <i class="fas fa-calendar me-1"></i>Age
+                        </label>
+                        <input type="number" class="form-control" id="age" name="age" min="13" max="120" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="gender" class="form-label">
+                            <i class="fas fa-venus-mars me-1"></i>Gender
+                        </label>
+                        <select class="form-select" id="gender" name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="prefer_not_to_say">Prefer not to say</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+                        <label class="form-check-label" for="terms">
+                            I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions</a>
+                        </label>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="privacy" name="privacy" required>
+                        <label class="form-check-label" for="privacy">
+                            I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#privacyModal">Privacy Policy</a>
+                        </label>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg" id="registerBtn">
+                            <i class="fas fa-user-plus me-2"></i>
+                            Create Account
+                        </button>
+                    </div>
+                </form>
+                
+                <hr>
+                
+                <div class="text-center">
+                    <p class="mb-2">Already have an account?</p>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-sign-in-alt me-1"></i>
+                        Login Here
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms and Conditions Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Terms and Conditions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6>1. Educational Purpose Only</h6>
+                <p>This application is designed for educational purposes only and should not be used as a substitute for professional medical diagnosis or treatment.</p>
+                
+                <h6>2. No Medical Advice</h6>
+                <p>The AI predictions provided by this application are not medical advice and should not be relied upon for medical decisions.</p>
+                
+                <h6>3. Data Usage</h6>
+                <p>Your uploaded images and personal information will be used solely for the purpose of providing AI predictions and improving the service.</p>
+                
+                <h6>4. Limitation of Liability</h6>
+                <p>The developers of this application are not responsible for any medical decisions made based on the AI predictions.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Privacy Policy Modal -->
+<div class="modal fade" id="privacyModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Privacy Policy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Information We Collect</h6>
+                <p>We collect personal information including name, email, age, gender, and uploaded images for skin analysis.</p>
+                
+                <h6>How We Use Information</h6>
+                <p>Your information is used to provide AI-powered skin analysis and improve our services.</p>
+                
+                <h6>Data Security</h6>
+                <p>We implement appropriate security measures to protect your personal information.</p>
+                
+                <h6>Data Sharing</h6>
+                <p>We do not share your personal information with third parties without your consent.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registerForm');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm_password');
+    const passwordMatch = document.getElementById('passwordMatch');
+    const registerBtn = document.getElementById('registerBtn');
+    
+    // Password confirmation validation
+    function validatePassword() {
+        if (confirmPassword.value === '') {
+            passwordMatch.textContent = '';
+            passwordMatch.className = 'form-text';
+            return false;
+        }
+        
+        if (password.value === confirmPassword.value) {
+            passwordMatch.textContent = '✓ Passwords match';
+            passwordMatch.className = 'form-text text-success';
+            return true;
+        } else {
+            passwordMatch.textContent = '✗ Passwords do not match';
+            passwordMatch.className = 'form-text text-danger';
+            return false;
+        }
+    }
+    
+    confirmPassword.addEventListener('input', validatePassword);
+    password.addEventListener('input', validatePassword);
+    
+    // Form submission
+    form.addEventListener('submit', function(e) {
+        if (!validatePassword()) {
+            e.preventDefault();
+            alert('Please ensure passwords match.');
+            return;
+        }
+        
+        // Show loading state
+        registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Account...';
+        registerBtn.disabled = true;
+    });
+    
+    // Auto-hide alerts
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            if (alert.classList.contains('show')) {
+                alert.classList.remove('show');
+                setTimeout(() => alert.remove(), 150);
+            }
+        }, 5000);
+    });
+    
+    // Age validation
+    const ageInput = document.getElementById('age');
+    ageInput.addEventListener('input', function() {
+        const age = parseInt(this.value);
+        if (age < 13) {
+            this.setCustomValidity('You must be at least 13 years old to register.');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+});
+</script>
+{% endblock %}

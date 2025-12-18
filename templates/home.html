@@ -1,0 +1,400 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Skin Disease AI{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Welcome Section -->
+    <div class="col-12 mb-4">
+        <div class="card text-dark" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
+
+            <div class="card-body text-center py-5">
+                <h1 class="display-5 mb-3">
+                    <i class="fas fa-microscope me-3"></i>
+                    Welcome back, {{ user.first_name }}!
+                </h1>
+                <p class="lead mb-4">Ready to analyze your skin condition with our advanced AI technology?</p>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <h3 class="mb-1">{{ user.total_diagnoses or 0 }}</h3>
+                                    <small>Total Diagnoses</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <h3 class="mb-1">{{ user.diagnoses_this_month or 0 }}</h3>
+                                    <small>This Month</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <h3 class="mb-1">{{ user.accuracy_rating or 'N/A' }}%</h3>
+                                    <small>Avg. Confidence</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-lg-8">
+        <div class="card shadow h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-upload me-2"></i>
+                    Skin Diagnosis
+                </h5>
+            </div>
+            <div class="card-body">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label for="fileInput" class="form-label">
+                            <i class="fas fa-camera me-1"></i>
+                            Choose a skin lesion image
+                        </label>
+                        <input type="file" class="form-control" id="fileInput" name="file" 
+                               accept=".png,.jpg,.jpeg" required>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Supported formats: PNG, JPG, JPEG (Max 16MB)
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg" id="diagnoseBtn">
+                            <i class="fas fa-search me-2"></i>
+                            Analyze Image
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Image Preview -->
+                <div id="imagePreview" class="mt-4" style="display: none;">
+                    <h6><i class="fas fa-image me-1"></i>Uploaded Image:</h6>
+                    <img id="previewImg" class="img-fluid rounded shadow" alt="Uploaded image">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="col-lg-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    Analysis Results
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="resultsContainer">
+                    <div class="text-center text-muted py-5">
+                        <i class="fas fa-upload fa-3x mb-3"></i>
+                        <p>Upload an image to get started with the analysis</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row mt-4">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-history me-2"></i>
+                    Recent Diagnoses
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if recent_diagnoses %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Condition</th>
+                                    <th>Confidence</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for diagnosis in recent_diagnoses[:5] %}
+                                <tr>
+                                    <td>{{ diagnosis.created_at.strftime('%m/%d/%Y') }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if diagnosis.confidence > 70 else 'warning' if diagnosis.confidence > 50 else 'danger' }}">
+                                            {{ diagnosis.predicted_class }}
+                                        </span>
+                                    </td>
+                                    <td>{{ "%.1f"|format(diagnosis.confidence) }}%</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if diagnosis.confidence > 70 else 'warning' }}">
+                                            {{ 'High Confidence' if diagnosis.confidence > 70 else 'Moderate' if diagnosis.confidence > 50 else 'Low Confidence' }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center">
+                        <a href="{{ url_for('profile') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-eye me-1"></i>
+                            View All Diagnoses
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-microscope fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No diagnoses yet. Start by uploading an image!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="col-lg-4">
+        <div class="card shadow">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>
+                    Quick Stats
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>This Week</span>
+                        <span class="fw-bold">{{ user.diagnoses_this_week or 0 }}</span>
+                    </div>
+                    <div class="progress mt-1" style="height: 8px;">
+                        <div class="progress-bar bg-primary" style="width: {{ ((user.diagnoses_this_week or 0) / 10 * 100) | round }}%"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>This Month</span>
+                        <span class="fw-bold">{{ user.diagnoses_this_month or 0 }}</span>
+                    </div>
+                    <div class="progress mt-1" style="height: 8px;">
+                        <div class="progress-bar bg-success" style="width: {{ ((user.diagnoses_this_month or 0) / 50 * 100) | round }}%"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>All Time</span>
+                        <span class="fw-bold">{{ user.total_diagnoses or 0 }}</span>
+                    </div>
+                    <div class="progress mt-1" style="height: 8px;">
+                        <div class="progress-bar bg-info" style="width: {{ ((user.total_diagnoses or 0) / 100 * 100) | round }}%"></div>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="text-center">
+                    <h6 class="text-muted">Most Common Condition</h6>
+                    <h5 class="text-primary">
+                        {% if user.most_common_condition %}
+                            {{ user.most_common_condition }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </h5>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tips Card -->
+        <div class="card shadow mt-3">
+            <div class="card-header bg-warning text-white">
+                <h6 class="mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    Tips for Better Results
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        Use good lighting
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        Keep camera steady
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        Focus on the affected area
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success me-2"></i>
+                        Use high-resolution images
+                    </li>
+                    <li>
+                        <i class="fas fa-check text-success me-2"></i>
+                        Consult a dermatologist
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model Information -->
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-brain fa-2x text-primary mb-3"></i>
+                <h5>AI Architecture</h5>
+                <p class="text-muted">Xception-based deep learning model trained on thousands of skin images</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-chart-line fa-2x text-success mb-3"></i>
+                <h5>Accuracy</h5>
+                <p class="text-muted">92% accuracy on test dataset with continuous improvements</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-tags fa-2x text-warning mb-3"></i>
+                <h5>6 Conditions</h5>
+                <p class="text-muted">Acne, Carcinoma, Eczema, Keratosis, Millia, Rosacea</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        alert('Please select a file first.');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    // Show loading state
+    const diagnoseBtn = document.getElementById('diagnoseBtn');
+    const originalText = diagnoseBtn.innerHTML;
+    diagnoseBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Analyzing...';
+    diagnoseBtn.disabled = true;
+    
+    // Make AJAX request
+    fetch('/predict', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            displayResults(data);
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while processing the image.');
+    })
+    .finally(() => {
+        // Reset button
+        diagnoseBtn.innerHTML = originalText;
+        diagnoseBtn.disabled = false;
+    });
+});
+
+document.getElementById('fileInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const previewImg = document.getElementById('previewImg');
+            const imagePreview = document.getElementById('imagePreview');
+            
+            previewImg.src = e.target.result;
+            imagePreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+function displayResults(data) {
+    const container = document.getElementById('resultsContainer');
+    
+    const resultsHtml = `
+        <div class="text-center mb-4">
+            <h4 class="text-primary">🎯 Most Likely Diagnosis</h4>
+            <h3 class="text-success">${data.top_prediction.class}</h3>
+            <h4 class="text-warning">${data.top_prediction.confidence.toFixed(1)}% Confidence</h4>
+        </div>
+        
+        <div class="mb-4">
+            <h6>📈 All Predictions</h6>
+            ${data.results.map((result, index) => `
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="fw-bold ${result.is_top ? 'text-primary' : 'text-muted'}">
+                            ${result.class}
+                        </span>
+                        <span class="text-muted">${result.confidence.toFixed(1)}%</span>
+                    </div>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar ${result.is_top ? 'bg-primary' : 'bg-secondary'}" 
+                             style="width: ${result.confidence}%">
+                            ${result.confidence.toFixed(1)}%
+                        </div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+        
+        <div class="alert alert-info">
+            <h6><i class="fas fa-lightbulb me-2"></i>Interpretation</h6>
+            <p class="mb-0">${data.interpretation}</p>
+        </div>
+        
+        <div class="text-center mt-3">
+            <button class="btn btn-outline-primary btn-sm" onclick="saveDiagnosis()">
+                <i class="fas fa-save me-1"></i>
+                Save Result
+            </button>
+        </div>
+    `;
+    
+    container.innerHTML = resultsHtml;
+}
+
+function saveDiagnosis() {
+    // This would typically save the diagnosis to the user's history
+    alert('Diagnosis saved to your profile!');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,4 @@
+- Updated runtime.txt to Python 3.12 (Render doesn't support 3.13)
+- Updated TensorFlow to 2.20.0 (2.13.0 not available on Render)
+- Run pip install --upgrade pip setuptools wheel
+- Run pip install -r requirements_flask.txt

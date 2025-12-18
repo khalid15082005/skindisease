@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Skin Disease AI - Welcome{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Header Section -->
+    <div class="col-12 text-center mb-5">
+        <h1 class="display-4 text-primary">
+            <i class="fas fa-microscope me-3"></i>
+            Skin Disease AI
+        </h1>
+        <p class="lead text-muted">Advanced Machine Learning for Skin Lesion Diagnosis</p>
+        <p class="text-muted">Please login or register to access the diagnosis features</p>
+    </div>
+</div>
+
+<!-- Authentication Cards -->
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow h-100">
+            <div class="card-header bg-primary text-white text-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-sign-in-alt me-2"></i>
+                    Login
+                </h5>
+            </div>
+            <div class="card-body text-center">
+                <p class="text-muted mb-4">Already have an account? Sign in to access your profile and diagnosis history.</p>
+                <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-sign-in-alt me-2"></i>
+                    Login
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-5">
+        <div class="card shadow h-100">
+            <div class="card-header bg-success text-white text-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-user-plus me-2"></i>
+                    Register
+                </h5>
+            </div>
+            <div class="card-body text-center">
+                <p class="text-muted mb-4">New to Skin Disease AI? Create an account to start analyzing skin conditions.</p>
+                <a href="{{ url_for('register') }}" class="btn btn-success btn-lg">
+                    <i class="fas fa-user-plus me-2"></i>
+                    Register
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Demo Credentials -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card bg-light">
+            <div class="card-body text-center">
+                <h5 class="text-primary">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Demo Account
+                </h5>
+                <p class="mb-2">Try the application with our demo account:</p>
+                <p class="mb-0">
+                    <strong>Email:</strong> demo@example.com<br>
+                    <strong>Password:</strong> demo123
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-brain fa-2x text-primary mb-3"></i>
+                <h5>AI-Powered Analysis</h5>
+                <p class="text-muted">Advanced Xception-based deep learning model for accurate skin condition identification</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-chart-line fa-2x text-success mb-3"></i>
+                <h5>High Accuracy</h5>
+                <p class="text-muted">92% accuracy on test dataset with continuous model improvements and updates</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-shield-alt fa-2x text-warning mb-3"></i>
+                <h5>Secure & Private</h5>
+                <p class="text-muted">Your data is protected with secure authentication and privacy-focused design</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Supported Conditions -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-info text-white text-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-tags me-2"></i>
+                    Supported Conditions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2 text-center">
+                        <div class="p-3">
+                            <i class="fas fa-circle fa-2x text-primary mb-2"></i>
+                            <h6>Acne</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <div class="p-3">
+                            <i class="fas fa-circle fa-2x text-danger mb-2"></i>
+                            <h6>Carcinoma</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <div class="p-3">
+                            <i class="fas fa-circle fa-2x text-warning mb-2"></i>
+                            <h6>Eczema</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <div class="p-3">
+                            <i class="fas fa-circle fa-2x text-success mb-2"></i>
+                            <h6>Keratosis</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <div class="p-3">
+                            <i class="fas fa-circle fa-2x text-secondary mb-2"></i>
+                            <h6>Millia</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <div class="p-3">
+                            <i class="fas fa-circle fa-2x text-info mb-2"></i>
+                            <h6>Rosacea</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Disclaimer -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="alert alert-warning text-center">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Important:</strong> This application is for educational purposes only and should not replace professional medical advice. Always consult a dermatologist for proper diagnosis and treatment.
+        </div>
+    </div>
+</div>
+{% endblock %}
