@@ -8,6 +8,10 @@ import numpy as np
 import hashlib
 import secrets
 from datetime import datetime, timedelta
+
+# Suppress TensorFlow logging
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # 0=all, 1=suppress INFO, 2=suppress WARNING, 3=suppress ERROR
+
 try:
     import tensorflow as tf
     from tensorflow.keras.preprocessing.image import img_to_array
