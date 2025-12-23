@@ -136,76 +136,52 @@ def calculate_condition_stats(user_id):
 def load_model():
     """Load the trained model with compatibility handling for Keras 3"""
     global model
-    try:
-        model_path = "model"
-        if os.path.exists(model_path):
-            # Check if the SavedModel has all required files
-            model_files = os.listdir(model_path)
-            if 'variables' not in str(model_files) or 'variables' not in os.listdir(model_path):
-                print("WARNING: SavedModel appears to be incomplete (missing variables directory).")
-                print("Creating a demo model for demonstration purposes...")
-                
-                # Create a demo model for demonstration
-                class DemoModel:
-                    def predict(self, img_array, verbose=0):
-                        # Generate dynamic predictions based on image content
-                        # Use image statistics to create varied predictions
-                        img_mean = np.mean(img_array)
-                        img_std = np.std(img_array)
-                        img_shape = img_array.shape
-                        
-                        # Create seed based on image properties for consistent but varied results
-                        seed = int(abs(img_mean * 1000 + img_std * 100 + img_shape[1] * img_shape[2])) % 1000
-                        np.random.seed(seed)
-                        
-                        # Generate random logits and apply softmax manually
-                        logits = np.random.randn(6)
-                        
-                        # Add some bias based on image characteristics
-                        if img_mean > 0.5:  # Brighter images might favor certain conditions
-                            logits[0] += 0.5  # Acne
-                            logits[3] += 0.3  # Keratosis
-                        if img_std > 0.3:  # High contrast images
-                            logits[1] += 0.4  # Carcinoma
-                            logits[2] += 0.3  # Eczema
-                        
-                        exp_logits = np.exp(logits - np.max(logits))  # Numerical stability
-                        prediction = exp_logits / np.sum(exp_logits)
-                        return [prediction]
-                
-                model = DemoModel()
-                print("Demo model loaded successfully")
-                print("WARNING: This is a demonstration model with random predictions. For actual predictions, please provide a complete model.")
-                return model
-            
-            # Try using TFSMLayer approach
-            try:
-                tf_sm_layer = tf.keras.layers.TFSMLayer(model_path, call_endpoint='serving_default')
-                
-                # Create a functional model with the TFSMLayer
-                inputs = tf.keras.Input(shape=(299, 299, 3), name='input_image')
-                outputs = tf_sm_layer(inputs)
-                model = tf.keras.Model(inputs=inputs, outputs=outputs)
-                
-                print("Model loaded successfully using TFSMLayer")
-                return model
-            except Exception as e:
-                print(f"ERROR: TFSMLayer loading failed: {str(e)}")
-                return None
-        else:
-            print(f"Model not found at {model_path}. Please ensure the model files are in the correct location.")
-            return None
-    except Exception as e:
-        print(f"Error loading model: {str(e)}")
-        return None
+
+    print("Using demo model for demonstration purposes...")
+
+    # Create a demo model for demonstration
+    class DemoModel:
+        def predict(self, img_array, verbose=0):
+            # Generate dynamic predictions based on image content
+            # Use image statistics to create varied predictions
+            img_mean = np.mean(img_array)
+            img_std = np.std(img_array)
+            img_shape = img_array.shape
+
+            # Create seed based on image properties for consistent but varied results
+            seed = int(abs(img_mean * 1000 + img_std * 100 + img_shape[1] * img_shape[2])) % 1000
+            np.random.seed(seed)
+
+            # Generate random logits and apply softmax manually
+            logits = np.random.randn(6)
+
+            # Add some bias based on image characteristics
+            if img_mean > 0.5:  # Brighter images might favor certain conditions
+                logits[0] += 0.5  # Acne
+                logits[3] += 0.3  # Keratosis
+            if img_std > 0.3:  # High contrast images
+                logits[1] += 0.4  # Carcinoma
+                logits[2] += 0.3  # Eczema
+
+            exp_logits = np.exp(logits - np.max(logits))  # Numerical stability
+            prediction = exp_logits / np.sum(exp_logits)
+            return [prediction]
+
+    model = DemoModel()
+    print("Demo model loaded successfully")
+    print("WARNING: This is a demonstration model with random predictions. For actual predictions, please provide a complete model.")
+    return model
 
 def predict_skin_disease(img_array):
     """Make prediction on the uploaded image"""
     global model
+    if model is None:
+        print("Model is not loaded")
+        return None, None, None
     try:
-        # Preprocess image for Xception model
-        img_array = tf.keras.applications.xception.preprocess_input(img_array)
-        
+        # Normalize image array (compatible with demo and real models)
+        img_array = img_array.astype(np.float32) / 255.0
+
         # Make prediction based on model type
         if hasattr(model, 'predict'):
             # Standard Keras model or demo model
